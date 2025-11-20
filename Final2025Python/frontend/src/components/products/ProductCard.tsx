@@ -13,7 +13,7 @@ interface ProductCardProps {
 
 export function ProductCard({ product, index }: ProductCardProps) {
   const { addItem, getItemQuantity } = useCartStore();
-  const cartQuantity = getItemQuantity(product.id);
+  const cartQuantity = getItemQuantity(product.id_key);
 
   const isLowStock = product.stock > 0 && product.stock < 5;
   const isOutOfStock = product.stock === 0;
@@ -81,9 +81,11 @@ export function ProductCard({ product, index }: ProductCardProps) {
           </h3>
 
           {/* Description */}
-          <p className="text-sm text-zinc-400 line-clamp-2 mb-3">
-            {product.description}
-          </p>
+          {product.description && (
+            <p className="text-sm text-zinc-400 line-clamp-2 mb-3">
+              {product.description}
+            </p>
+          )}
 
           {/* Price & Stock Info */}
           <div className="flex items-center justify-between mt-auto">

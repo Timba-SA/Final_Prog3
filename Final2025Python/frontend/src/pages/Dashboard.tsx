@@ -55,9 +55,13 @@ export default function Dashboard() {
   if (!health) return null;
 
   const isHealthy = health.status === 'healthy';
-  const dbLatency = health.database.latency_ms;
-  const redisLatency = health.redis.latency_ms;
-  const uptime = Math.floor(health.uptime_seconds / 60); // Convert to minutes
+  const dbLatency = health.checks.database.latency_ms;
+  const dbHealth = health.checks.database.health;
+  const redisStatus = health.checks.redis.status;
+  const redisHealth = health.checks.redis.health;
+  const poolSize = health.checks.db_pool.size;
+  const poolInUse = health.checks.db_pool.checked_out;
+  const poolUtilization = health.checks.db_pool.utilization_percent;
 
   return (
     <div className="container mx-auto p-6 space-y-6">
@@ -80,8 +84,10 @@ export default function Dashboard() {
             {health.status.toUpperCase()}
           </Badge>
           <div className="text-right">
-            <p className="text-xs text-zinc-500">Version</p>
-            <p className="font-mono text-sm text-zinc-300">{health.version}</p>
+            <p className="text-xs text-zinc-500">Timestamp</p>
+            <p className="font-mono text-sm text-zinc-300">
+              {new Date(health.timestamp).toLocaleTimeString()}
+            </p>
           </div>
         </div>
       </div>
@@ -90,10 +96,10 @@ export default function Dashboard() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <MetricCard
           title="Database Status"
-          value={health.database.status}
+          value={dbHealth}
           subtitle={`Latency: ${dbLatency}ms`}
           icon={Database}
-          status={health.database.status === 'connected' ? 'success' : 'error'}
+          status={dbHealth === 'healthy' ? 'success' : 'error'}
         />
         
         <MetricCard
@@ -106,18 +112,18 @@ export default function Dashboard() {
         
         <MetricCard
           title="Redis Cache"
-          value={health.redis.status}
-          subtitle={`${redisLatency}ms latency`}
+          value={redisHealth}
+          subtitle={redisStatus}
           icon={Activity}
-          status={health.redis.status === 'connected' ? 'success' : 'error'}
+          status={redisHealth === 'healthy' ? 'success' : 'error'}
         />
         
         <MetricCard
-          title="System Uptime"
-          value={`${uptime}m`}
-          subtitle={`${health.uptime_seconds}s total`}
+          title="Pool Utilization"
+          value={`${poolUtilization.toFixed(1)}%`}
+          subtitle={`${poolInUse}/${poolSize} in use`}
           icon={Clock}
-          status="info"
+          status={poolUtilization < 70 ? 'success' : poolUtilization < 90 ? 'warning' : 'error'}
         />
       </div>
 
@@ -126,9 +132,9 @@ export default function Dashboard() {
         <LatencyChart currentLatency={dbLatency} />
         
         <PoolStatus
-          poolSize={health.database.pool_size}
-          poolInUse={health.database.pool_in_use}
-          utilizationPercent={health.database.utilization_percent}
+          poolSize={poolSize}
+          poolInUse={poolInUse}
+          utilizationPercent={poolUtilization}
         />
       </div>
 
@@ -142,19 +148,19 @@ export default function Dashboard() {
           <div>
             <p className="text-xs text-zinc-500 mb-1">Pool Size</p>
             <p className="text-xl font-bold font-mono">
-              {health.database.pool_size}
+              {poolSize}
             </p>
           </div>
           <div>
             <p className="text-xs text-zinc-500 mb-1">Active Connections</p>
             <p className="text-xl font-bold font-mono text-emerald-500">
-              {health.database.pool_in_use}
+              {poolInUse}
             </p>
           </div>
           <div>
             <p className="text-xs text-zinc-500 mb-1">Idle Connections</p>
             <p className="text-xl font-bold font-mono text-zinc-400">
-              {health.database.pool_size - health.database.pool_in_use}
+              {poolSize - poolInUse}
             </p>
           </div>
           <div>

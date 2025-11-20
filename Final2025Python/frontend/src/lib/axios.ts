@@ -1,6 +1,8 @@
 import axios from 'axios';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+// En producción usa el proxy de nginx (/api -> backend:8000)
+// En desarrollo usa el proxy de Vite (/api -> localhost:8000)
+const API_BASE_URL = import.meta.env.VITE_API_URL || '/api/';
 
 export const apiClient = axios.create({
   baseURL: API_BASE_URL,

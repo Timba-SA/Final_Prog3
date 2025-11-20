@@ -1,6 +1,6 @@
 import { Outlet, Link, useLocation } from 'react-router-dom';
 import { useCartStore } from '@/store/cartStore';
-import { ShoppingCart, LayoutDashboard, Package, Zap } from 'lucide-react';
+import { ShoppingCart, LayoutDashboard, Package, Zap, Users, FolderTree, ShoppingBag, FileText, MapPin, Star, ClipboardList } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 
 export default function Layout() {
@@ -11,6 +11,13 @@ export default function Layout() {
   const navItems = [
     { path: '/', label: 'Dashboard', icon: LayoutDashboard },
     { path: '/products', label: 'Products', icon: Package },
+    { path: '/clients', label: 'Clients', icon: Users },
+    { path: '/categories', label: 'Categories', icon: FolderTree },
+    { path: '/orders', label: 'Orders', icon: ShoppingBag },
+    { path: '/bills', label: 'Bills', icon: FileText },
+    { path: '/addresses', label: 'Addresses', icon: MapPin },
+    { path: '/reviews', label: 'Reviews', icon: Star },
+    { path: '/order-details', label: 'Order Details', icon: ClipboardList },
   ];
 
   const isActive = (path: string) => location.pathname === path;

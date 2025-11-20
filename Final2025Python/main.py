@@ -7,6 +7,7 @@ and configures global exception handlers.
 import os
 import uvicorn
 import logging
+from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from starlette import status
@@ -33,6 +34,46 @@ from controllers.health_check import router as health_check_controller
 from repositories.base_repository_impl import InstanceNotFoundError
 
 
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """
+    Lifespan context manager for startup and shutdown events.
+    
+    Manages:
+    - Redis connection check on startup
+    - Graceful shutdown of Redis and database connections
+    """
+    # Startup
+    logger.info("🚀 Starting FastAPI E-commerce API...")
+    
+    # Check Redis connection
+    if check_redis_connection():
+        logger.info("✅ Redis cache is available")
+    else:
+        logger.warning("⚠️  Redis cache is NOT available - running without cache")
+    
+    yield
+    
+    # Shutdown
+    logger.info("👋 Shutting down FastAPI E-commerce API...")
+    
+    # Close Redis connection
+    try:
+        redis_config.close()
+        logger.info("✅ Redis connection closed")
+    except Exception as e:
+        logger.error(f"❌ Error closing Redis: {e}")
+    
+    # Close database engine
+    try:
+        engine.dispose()
+        logger.info("✅ Database engine disposed")
+    except Exception as e:
+        logger.error(f"❌ Error disposing database engine: {e}")
+    
+    logger.info("✅ Shutdown complete")
+
+
 def create_fastapi_app() -> FastAPI:
     """
     Create and configure the FastAPI application.
@@ -46,7 +87,8 @@ def create_fastapi_app() -> FastAPI:
         description="FastAPI REST API for e-commerce system with PostgreSQL",
         version="1.0.0",
         docs_url="/docs",
-        redoc_url="/redoc"
+        redoc_url="/redoc",
+        lifespan=lifespan
     )
 
     # Global exception handlers
@@ -103,40 +145,6 @@ def create_fastapi_app() -> FastAPI:
     # Rate limiting: 100 requests per 60 seconds per IP (configurable via env)
     fastapi_app.add_middleware(RateLimiterMiddleware, calls=100, period=60)
     logger.info("✅ Rate limiting enabled: 100 requests/60s per IP")
-
-    # Startup event: Check Redis connection
-    @fastapi_app.on_event("startup")
-    async def startup_event():
-        """Run on application startup"""
-        logger.info("🚀 Starting FastAPI E-commerce API...")
-
-        # Check Redis connection
-        if check_redis_connection():
-            logger.info("✅ Redis cache is available")
-        else:
-            logger.warning("⚠️  Redis cache is NOT available - running without cache")
-
-    # Shutdown event: Graceful shutdown
-    @fastapi_app.on_event("shutdown")
-    async def shutdown_event():
-        """Graceful shutdown - close all connections"""
-        logger.info("👋 Shutting down FastAPI E-commerce API...")
-
-        # Close Redis connection
-        try:
-            redis_config.close()
-            logger.info("✅ Redis connection closed")
-        except Exception as e:
-            logger.error(f"❌ Error closing Redis: {e}")
-
-        # Close database engine
-        try:
-            engine.dispose()
-            logger.info("✅ Database engine disposed")
-        except Exception as e:
-            logger.error(f"❌ Error disposing database engine: {e}")
-
-        logger.info("✅ Shutdown complete")
 
     return fastapi_app
 

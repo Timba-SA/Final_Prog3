@@ -5,105 +5,126 @@
 export interface HealthCheck {
   status: string;
   timestamp: string;
-  database: {
-    status: string;
-    latency_ms: number;
-    pool_size: number;
-    pool_in_use: number;
-    utilization_percent: number;
+  checks: {
+    database: {
+      status: string;
+      health: string;
+      latency_ms: number;
+      thresholds: {
+        warning_ms: number;
+        critical_ms: number;
+      };
+    };
+    redis: {
+      status: string;
+      health: string;
+    };
+    db_pool: {
+      health: string;
+      size: number;
+      checked_in: number;
+      checked_out: number;
+      overflow: number;
+      total_capacity: number;
+      utilization_percent: number;
+      thresholds: {
+        warning_percent: number;
+        critical_percent: number;
+      };
+    };
   };
-  redis: {
-    status: string;
-    latency_ms: number;
-  };
-  uptime_seconds: number;
-  version: string;
 }
 
 export interface Product {
-  id: number;
+  id_key: number;
   name: string;
-  description: string;
   price: number;
   stock: number;
   category_id: number;
   category?: Category;
+  description?: string;
   image_url?: string;
-  is_active: boolean;
   created_at: string;
   updated_at: string;
 }
 
 export interface Category {
-  id: number;
+  id_key: number;
   name: string;
-  description?: string;
   created_at: string;
   updated_at: string;
 }
 
 export interface Client {
-  id: number;
+  id_key: number;
   name: string;
+  lastname: string;
   email: string;
-  phone?: string;
+  telephone?: string;
   created_at: string;
   updated_at: string;
 }
 
 export interface Order {
-  id: number;
-  client_id: number;
-  client?: Client;
-  order_date: string;
+  id_key: number;
+  date: string;
   total: number;
-  status: 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
+  delivery_method: 'pickup' | 'delivery' | 'shipping';
+  status: 'pending' | 'confirmed' | 'shipped' | 'delivered' | 'cancelled';
+  client_id: number;
+  bill_id: number;
+  client?: Client;
+  bill?: Bill;
   order_details?: OrderDetail[];
   created_at: string;
   updated_at: string;
 }
 
 export interface OrderDetail {
-  id: number;
+  id_key: number;
   order_id: number;
   product_id: number;
-  product?: Product;
   quantity: number;
   unit_price: number;
   subtotal: number;
+  product?: Product;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface Bill {
-  id: number;
-  order_id: number;
-  order?: Order;
+  id_key: number;
   bill_number: string;
-  bill_date: string;
+  discount?: number;
+  date: string;
   total: number;
-  status: 'pending' | 'paid' | 'cancelled';
+  payment_type: 'cash' | 'credit_card' | 'debit_card' | 'transfer';
+  client_id: number;
+  client?: Client;
+  order?: Order;
   created_at: string;
   updated_at: string;
 }
 
 export interface Address {
-  id: number;
-  client_id: number;
+  id_key: number;
   street: string;
+  number?: string;
   city: string;
-  state: string;
-  postal_code: string;
-  country: string;
-  is_default: boolean;
+  client_id: number;
+  client?: Client;
   created_at: string;
   updated_at: string;
 }
 
 export interface Review {
-  id: number;
+  id_key: number;
   product_id: number;
   client_id: number;
-  rating: number;
+  stars: number;
   comment?: string;
+  product?: Product;
+  client?: Client;
   created_at: string;
   updated_at: string;
 }

@@ -49,7 +49,7 @@ export default function Products() {
     );
   }
 
-  const activeProducts = products?.filter((p) => p.is_active) || [];
+  const activeProducts = products || [];
   const lowStockCount = activeProducts.filter(
     (p) => p.stock > 0 && p.stock < 5
   ).length;
@@ -111,7 +111,7 @@ export default function Products() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {activeProducts.map((product, index) => (
-            <ProductCard key={product.id} product={product} index={index} />
+            <ProductCard key={product.id_key} product={product} index={index} />
           ))}
         </div>
       )}
