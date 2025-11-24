@@ -67,7 +67,7 @@ export default function Register() {
       const existingClient = clients.find(
         (c) => c.email.toLowerCase() === data.email.toLowerCase()
       );
-      
+
       if (existingClient) {
         throw new Error('Este email ya está registrado');
       }
@@ -97,17 +97,23 @@ export default function Register() {
 
   return (
     <div className="min-h-screen flex items-center justify-center px-6 py-12 relative overflow-hidden">
-      {/* Animated background */}
+      {/* Dynamic Animated background with multiple orbs */}
+      <div className="absolute inset-0 gradient-mesh opacity-30" />
       <motion.div
-        className="absolute inset-0 opacity-20"
+        className="absolute top-1/4 left-1/4 w-96 h-96 bg-emerald-500/20 rounded-full blur-3xl"
         animate={{
-          background: [
-            'radial-gradient(circle at 30% 50%, rgba(34, 197, 94, 0.15) 0%, transparent 50%)',
-            'radial-gradient(circle at 70% 50%, rgba(34, 197, 94, 0.15) 0%, transparent 50%)',
-            'radial-gradient(circle at 30% 50%, rgba(34, 197, 94, 0.15) 0%, transparent 50%)',
-          ],
+          x: [0, 100, 0],
+          y: [0, -50, 0],
         }}
-        transition={{ duration: 8, repeat: Infinity }}
+        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+      />
+      <motion.div
+        className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-500/15 rounded-full blur-3xl"
+        animate={{
+          x: [0, -100, 0],
+          y: [0, 50, 0],
+        }}
+        transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
       />
 
       <div className="w-full max-w-md relative z-10">
@@ -127,9 +133,9 @@ export default function Register() {
             </span>
           </Link>
 
-          <Card className="p-8 glassmorphism border-zinc-800">
+          <Card className="p-8 glassmorphism-strong border-zinc-800 hover:border-emerald-500/30 transition-smooth">
             <div className="text-center mb-8">
-              <h1 className="text-3xl font-bold mb-2">Crear Cuenta Nueva</h1>
+              <h1 className="text-3xl font-bold mb-2 shimmer">Crear Cuenta Nueva</h1>
               <p className="text-zinc-400">Unite a la comunidad tech</p>
             </div>
 
@@ -145,7 +151,7 @@ export default function Register() {
                   type="text"
                   placeholder="Juan"
                   {...register('name')}
-                  className="bg-zinc-900 border-zinc-700 focus:border-emerald-500"
+                  className="bg-zinc-900 border-zinc-700 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-smooth"
                 />
                 {errors.name && (
                   <p className="text-red-500 text-sm">{errors.name.message}</p>
@@ -163,7 +169,7 @@ export default function Register() {
                   type="text"
                   placeholder="Pérez"
                   {...register('lastname')}
-                  className="bg-zinc-900 border-zinc-700 focus:border-emerald-500"
+                  className="bg-zinc-900 border-zinc-700 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-smooth"
                 />
                 {errors.lastname && (
                   <p className="text-red-500 text-sm">{errors.lastname.message}</p>
@@ -181,7 +187,7 @@ export default function Register() {
                   type="email"
                   placeholder="tu@email.com"
                   {...register('email')}
-                  className="bg-zinc-900 border-zinc-700 focus:border-emerald-500"
+                  className="bg-zinc-900 border-zinc-700 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-smooth"
                 />
                 {errors.email && (
                   <p className="text-red-500 text-sm">{errors.email.message}</p>
@@ -199,7 +205,7 @@ export default function Register() {
                   type="tel"
                   placeholder="+54 9 11 1234-5678"
                   {...register('telephone')}
-                  className="bg-zinc-900 border-zinc-700 focus:border-emerald-500"
+                  className="bg-zinc-900 border-zinc-700 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-smooth"
                 />
                 {errors.telephone && (
                   <p className="text-red-500 text-sm">{errors.telephone.message}</p>
@@ -217,7 +223,7 @@ export default function Register() {
                   type="password"
                   placeholder="••••••••"
                   {...register('password')}
-                  className="bg-zinc-900 border-zinc-700 focus:border-emerald-500"
+                  className="bg-zinc-900 border-zinc-700 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-smooth"
                 />
                 {errors.password && (
                   <p className="text-red-500 text-sm">{errors.password.message}</p>
@@ -235,7 +241,7 @@ export default function Register() {
                   type="password"
                   placeholder="••••••••"
                   {...register('confirmPassword')}
-                  className="bg-zinc-900 border-zinc-700 focus:border-emerald-500"
+                  className="bg-zinc-900 border-zinc-700 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-smooth"
                 />
                 {errors.confirmPassword && (
                   <p className="text-red-500 text-sm">{errors.confirmPassword.message}</p>
@@ -258,7 +264,7 @@ export default function Register() {
                 type="submit"
                 size="lg"
                 disabled={registerMutation.isPending}
-                className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold cyber-glow"
+                className="w-full bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white font-bold cyber-glow-strong transition-smooth hover-lift"
               >
                 {registerMutation.isPending ? (
                   <motion.div
@@ -293,7 +299,7 @@ export default function Register() {
               asChild
               variant="outline"
               size="lg"
-              className="w-full border-zinc-700 hover:border-emerald-500 hover:text-emerald-500"
+              className="w-full border-zinc-700 hover:border-emerald-500 hover:text-emerald-500 transition-smooth hover:bg-emerald-500/10"
             >
               <Link to="/login">Iniciar Sesión</Link>
             </Button>

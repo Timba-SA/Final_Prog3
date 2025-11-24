@@ -69,8 +69,8 @@ export interface Order {
   id_key: number;
   date: string;
   total: number;
-  delivery_method: 'pickup' | 'delivery' | 'shipping';
-  status: 'pending' | 'confirmed' | 'shipped' | 'delivered' | 'cancelled';
+  delivery_method: 'pickup' | 'delivery' | 'shipping' | number;
+  status: 'pending' | 'confirmed' | 'shipped' | 'delivered' | 'cancelled' | number;
   client_id: number;
   bill_id: number;
   client?: Client;
@@ -98,7 +98,7 @@ export interface Bill {
   discount?: number;
   date: string;
   total: number;
-  payment_type: 'cash' | 'credit_card' | 'debit_card' | 'transfer';
+  payment_type: 'cash' | 'credit_card' | 'debit_card' | 'transfer' | number;
   client_id: number;
   client?: Client;
   order?: Order;

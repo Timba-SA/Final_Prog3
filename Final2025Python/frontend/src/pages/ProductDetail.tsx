@@ -126,10 +126,21 @@ export default function ProductDetail() {
             transition={{ delay: 0.1 }}
           >
             <Card className="p-8 glassmorphism border-zinc-800">
-              <div className="aspect-square bg-zinc-900 rounded-lg flex items-center justify-center relative overflow-hidden group">
-                <Zap className="h-32 w-32 text-zinc-700 group-hover:text-emerald-500 transition-colors duration-500" />
+              <div className="aspect-square bg-gradient-to-br from-zinc-800 to-zinc-900 rounded-lg flex items-center justify-center relative overflow-hidden group">
+                {product.image_url ? (
+                  <motion.img
+                    src={product.image_url}
+                    alt={product.name}
+                    className="w-full h-full object-cover"
+                    initial={{ scale: 1.1 }}
+                    animate={{ scale: 1 }}
+                    transition={{ duration: 0.5 }}
+                  />
+                ) : (
+                  <Package className="h-32 w-32 text-zinc-600" />
+                )}
                 {product.stock === 0 && (
-                  <div className="absolute inset-0 bg-zinc-950/80 flex items-center justify-center">
+                  <div className="absolute inset-0 bg-zinc-950/80 backdrop-blur-sm flex items-center justify-center">
                     <span className="text-red-500 font-bold text-2xl">SIN STOCK</span>
                   </div>
                 )}
@@ -164,11 +175,10 @@ export default function ProductDetail() {
                   {[...Array(5)].map((_, i) => (
                     <Star
                       key={i}
-                      className={`h-5 w-5 ${
-                        i < Math.round(averageRating)
+                      className={`h-5 w-5 ${i < Math.round(averageRating)
                           ? 'fill-amber-500 text-amber-500'
                           : 'text-zinc-700'
-                      }`}
+                        }`}
                     />
                   ))}
                 </div>
@@ -295,11 +305,10 @@ export default function ProductDetail() {
                             {[...Array(5)].map((_, i) => (
                               <Star
                                 key={i}
-                                className={`h-4 w-4 ${
-                                  i < review.stars
+                                className={`h-4 w-4 ${i < review.stars
                                     ? 'fill-amber-500 text-amber-500'
                                     : 'text-zinc-700'
-                                }`}
+                                  }`}
                               />
                             ))}
                           </div>

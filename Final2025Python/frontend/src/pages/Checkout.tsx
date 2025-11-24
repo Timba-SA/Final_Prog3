@@ -72,7 +72,7 @@ export default function Checkout() {
   const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(1);
   const [orderSuccess, setOrderSuccess] = useState(false);
-  
+
   const { user, isAuthenticated } = useAuthStore();
   const { items, getTotalPrice, clearCart } = useCartStore();
 
@@ -80,11 +80,11 @@ export default function Checkout() {
   const [identificationData, setIdentificationData] = useState<IdentificationFormData | null>(
     isAuthenticated && user
       ? {
-          name: user.name,
-          lastname: user.lastname,
-          email: user.email,
-          telephone: user.telephone,
-        }
+        name: user.name,
+        lastname: user.lastname,
+        email: user.email,
+        telephone: user.telephone,
+      }
       : null
   );
   const [shippingData, setShippingData] = useState<ShippingFormData | null>(null);
@@ -140,20 +140,38 @@ export default function Checkout() {
       });
 
       // 3. Create bill
+      const today = new Date();
+      const dateString = today.toISOString().split('T')[0]; // Format: YYYY-MM-DD
+
+      // Map payment type to backend enum
+      const paymentTypeMap: Record<string, number> = {
+        'cash': 1,
+        'credit_card': 4,
+        'debit_card': 3,
+        'transfer': 5,
+      };
+
       const bill = await billsService.create({
         bill_number: `BILL-${Date.now()}`,
-        date: new Date().toISOString(),
+        date: dateString,
         total: totalPrice,
-        payment_type: paymentData.paymentType,
+        discount: 0,
+        payment_type: paymentTypeMap[paymentData.paymentType] || 1,
         client_id: clientId,
       });
 
       // 4. Create order
+      const deliveryMethodMap: Record<string, number> = {
+        'pickup': 2, // ON_HAND
+        'delivery': 3, // HOME_DELIVERY
+        'shipping': 3, // HOME_DELIVERY
+      };
+
       const order = await ordersService.create({
         date: new Date().toISOString(),
         total: totalPrice,
-        delivery_method: shippingData.deliveryMethod,
-        status: 'pending',
+        delivery_method: deliveryMethodMap[shippingData.deliveryMethod] || 3,
+        status: 1, // PENDING
         client_id: clientId,
         bill_id: bill.id_key,
       });
@@ -273,7 +291,7 @@ export default function Checkout() {
               const Icon = step.icon;
               const isActive = currentStep === step.number;
               const isCompleted = currentStep > step.number;
-              
+
               return (
                 <div key={step.number} className="flex items-center flex-1">
                   <div className="flex flex-col items-center flex-1">
@@ -298,9 +316,8 @@ export default function Checkout() {
                   {index < steps.length - 1 && (
                     <div className="flex-1 h-1 bg-zinc-800 mx-2">
                       <div
-                        className={`h-full bg-emerald-600 transition-all duration-500 ${
-                          currentStep > step.number ? 'w-full' : 'w-0'
-                        }`}
+                        className={`h-full bg-emerald-600 transition-all duration-500 ${currentStep > step.number ? 'w-full' : 'w-0'
+                          }`}
                       />
                     </div>
                   )}
@@ -552,56 +569,56 @@ export default function Checkout() {
                   {/* Card Details (if card selected) */}
                   {(paymentForm.watch('paymentType') === 'credit_card' ||
                     paymentForm.watch('paymentType') === 'debit_card') && (
-                    <div className="space-y-4 p-6 bg-zinc-900 rounded-lg border border-zinc-800">
-                      <div className="space-y-2">
-                        <Label htmlFor="cardNumber">Número de Tarjeta</Label>
-                        <Input
-                          id="cardNumber"
-                          {...paymentForm.register('cardNumber')}
-                          placeholder="1234 5678 9012 3456"
-                          maxLength={19}
-                          className="bg-zinc-950 border-zinc-700"
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="cardName">Nombre del Titular</Label>
-                        <Input
-                          id="cardName"
-                          {...paymentForm.register('cardName')}
-                          placeholder="JUAN PEREZ"
-                          className="bg-zinc-950 border-zinc-700"
-                        />
-                      </div>
-                      <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-4 p-6 bg-zinc-900 rounded-lg border border-zinc-800">
                         <div className="space-y-2">
-                          <Label htmlFor="cardExpiry">Vencimiento</Label>
+                          <Label htmlFor="cardNumber">Número de Tarjeta</Label>
                           <Input
-                            id="cardExpiry"
-                            {...paymentForm.register('cardExpiry')}
-                            placeholder="MM/AA"
-                            maxLength={5}
+                            id="cardNumber"
+                            {...paymentForm.register('cardNumber')}
+                            placeholder="1234 5678 9012 3456"
+                            maxLength={19}
                             className="bg-zinc-950 border-zinc-700"
                           />
                         </div>
                         <div className="space-y-2">
-                          <Label htmlFor="cardCvv">CVV</Label>
+                          <Label htmlFor="cardName">Nombre del Titular</Label>
                           <Input
-                            id="cardCvv"
-                            {...paymentForm.register('cardCvv')}
-                            placeholder="123"
-                            maxLength={4}
-                            type="password"
+                            id="cardName"
+                            {...paymentForm.register('cardName')}
+                            placeholder="JUAN PEREZ"
                             className="bg-zinc-950 border-zinc-700"
                           />
                         </div>
+                        <div className="grid grid-cols-2 gap-4">
+                          <div className="space-y-2">
+                            <Label htmlFor="cardExpiry">Vencimiento</Label>
+                            <Input
+                              id="cardExpiry"
+                              {...paymentForm.register('cardExpiry')}
+                              placeholder="MM/AA"
+                              maxLength={5}
+                              className="bg-zinc-950 border-zinc-700"
+                            />
+                          </div>
+                          <div className="space-y-2">
+                            <Label htmlFor="cardCvv">CVV</Label>
+                            <Input
+                              id="cardCvv"
+                              {...paymentForm.register('cardCvv')}
+                              placeholder="123"
+                              maxLength={4}
+                              type="password"
+                              className="bg-zinc-950 border-zinc-700"
+                            />
+                          </div>
+                        </div>
+                        {paymentForm.formState.errors.cardNumber && (
+                          <p className="text-red-500 text-sm">
+                            {paymentForm.formState.errors.cardNumber.message}
+                          </p>
+                        )}
                       </div>
-                      {paymentForm.formState.errors.cardNumber && (
-                        <p className="text-red-500 text-sm">
-                          {paymentForm.formState.errors.cardNumber.message}
-                        </p>
-                      )}
-                    </div>
-                  )}
+                    )}
 
                   <div className="flex gap-4">
                     <Button
@@ -695,8 +712,8 @@ export default function Checkout() {
                           {shippingData.deliveryMethod === 'delivery'
                             ? 'Envío a Domicilio'
                             : shippingData.deliveryMethod === 'pickup'
-                            ? 'Retiro en Sucursal'
-                            : 'Envío Express'}
+                              ? 'Retiro en Sucursal'
+                              : 'Envío Express'}
                         </p>
                       </div>
                     </div>
@@ -711,10 +728,10 @@ export default function Checkout() {
                           {paymentData.paymentType === 'cash'
                             ? 'Efectivo'
                             : paymentData.paymentType === 'credit_card'
-                            ? 'Tarjeta de Crédito'
-                            : paymentData.paymentType === 'debit_card'
-                            ? 'Tarjeta de Débito'
-                            : 'Transferencia Bancaria'}
+                              ? 'Tarjeta de Crédito'
+                              : paymentData.paymentType === 'debit_card'
+                                ? 'Tarjeta de Débito'
+                                : 'Transferencia Bancaria'}
                         </p>
                         {paymentData.cardNumber && (
                           <p className="text-sm text-zinc-500 mt-1">

@@ -43,11 +43,11 @@ export default function Login() {
       // Get all clients and find by email
       const clients = await clientsService.getAll();
       const client = clients.find((c) => c.email.toLowerCase() === email.toLowerCase());
-      
+
       if (!client) {
         throw new Error('Usuario no encontrado');
       }
-      
+
       return client;
     },
     onSuccess: (client) => {
@@ -66,17 +66,23 @@ export default function Login() {
 
   return (
     <div className="min-h-screen flex items-center justify-center px-6 py-12 relative overflow-hidden">
-      {/* Animated background */}
+      {/* Dynamic Animated background with multiple orbs */}
+      <div className="absolute inset-0 gradient-mesh opacity-30" />
       <motion.div
-        className="absolute inset-0 opacity-20"
+        className="absolute top-1/4 left-1/4 w-96 h-96 bg-emerald-500/20 rounded-full blur-3xl"
         animate={{
-          background: [
-            'radial-gradient(circle at 30% 50%, rgba(34, 197, 94, 0.15) 0%, transparent 50%)',
-            'radial-gradient(circle at 70% 50%, rgba(34, 197, 94, 0.15) 0%, transparent 50%)',
-            'radial-gradient(circle at 30% 50%, rgba(34, 197, 94, 0.15) 0%, transparent 50%)',
-          ],
+          x: [0, 100, 0],
+          y: [0, -50, 0],
         }}
-        transition={{ duration: 8, repeat: Infinity }}
+        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+      />
+      <motion.div
+        className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-500/15 rounded-full blur-3xl"
+        animate={{
+          x: [0, -100, 0],
+          y: [0, 50, 0],
+        }}
+        transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
       />
 
       <div className="w-full max-w-md relative z-10">
@@ -96,9 +102,9 @@ export default function Login() {
             </span>
           </Link>
 
-          <Card className="p-8 glassmorphism border-zinc-800">
+          <Card className="p-8 glassmorphism-strong border-zinc-800 hover:border-emerald-500/30 transition-smooth">
             <div className="text-center mb-8">
-              <h1 className="text-3xl font-bold mb-2">Bienvenido de vuelta</h1>
+              <h1 className="text-3xl font-bold mb-2 shimmer">Bienvenido de vuelta</h1>
               <p className="text-zinc-400">Ingresá a tu cuenta para continuar</p>
             </div>
 
@@ -114,7 +120,7 @@ export default function Login() {
                   type="email"
                   placeholder="tu@email.com"
                   {...register('email')}
-                  className="bg-zinc-900 border-zinc-700 focus:border-emerald-500"
+                  className="bg-zinc-900 border-zinc-700 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-smooth"
                 />
                 {errors.email && (
                   <p className="text-red-500 text-sm">{errors.email.message}</p>
@@ -132,7 +138,7 @@ export default function Login() {
                   type="password"
                   placeholder="••••••••"
                   {...register('password')}
-                  className="bg-zinc-900 border-zinc-700 focus:border-emerald-500"
+                  className="bg-zinc-900 border-zinc-700 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-smooth"
                 />
                 {errors.password && (
                   <p className="text-red-500 text-sm">{errors.password.message}</p>
@@ -155,7 +161,7 @@ export default function Login() {
                 type="submit"
                 size="lg"
                 disabled={loginMutation.isPending}
-                className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold cyber-glow"
+                className="w-full bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white font-bold cyber-glow-strong transition-smooth hover-lift"
               >
                 {loginMutation.isPending ? (
                   <motion.div
@@ -190,7 +196,7 @@ export default function Login() {
               asChild
               variant="outline"
               size="lg"
-              className="w-full border-zinc-700 hover:border-emerald-500 hover:text-emerald-500"
+              className="w-full border-zinc-700 hover:border-emerald-500 hover:text-emerald-500 transition-smooth hover:bg-emerald-500/10"
             >
               <Link to="/register">Crear Cuenta Nueva</Link>
             </Button>

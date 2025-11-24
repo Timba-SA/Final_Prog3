@@ -6,7 +6,6 @@ from schemas.base_schema import BaseSchema
 
 if TYPE_CHECKING:
     from schemas.category_schema import CategorySchema
-    from schemas.order_detail_schema import OrderDetailSchema
     from schemas.review_schema import ReviewSchema
 
 
@@ -23,4 +22,3 @@ class ProductSchema(BaseSchema):
 
     category: Optional['CategorySchema'] = Field(None, exclude=True)
     reviews: Optional[List['ReviewSchema']] = Field(default=[], exclude=True)
-    order_details: Optional[List['OrderDetailSchema']] = Field(default=[], exclude=True)

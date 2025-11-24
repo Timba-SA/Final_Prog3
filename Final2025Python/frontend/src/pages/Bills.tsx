@@ -18,7 +18,7 @@ export default function Bills() {
     discount: 0,
     date: new Date().toISOString().split('T')[0],
     total: 0,
-    payment_type: 'cash' as 'cash' | 'credit_card' | 'debit_card' | 'transfer',
+    payment_type: 1, // Default to CASH (1)
     client_id: 0,
   });
 
@@ -56,10 +56,18 @@ export default function Bills() {
       discount: bill.discount || 0,
       date: bill.date.split('T')[0],
       total: bill.total,
-      payment_type: bill.payment_type,
+      payment_type: bill.payment_type as number,
       client_id: bill.client_id,
     });
     setIsDialogOpen(true);
+  };
+
+  const paymentTypeLabels: Record<number, string> = {
+    1: 'Efectivo',
+    2: 'Tarjeta',
+    3: 'Débito',
+    4: 'Crédito',
+    5: 'Transferencia',
   };
 
   if (isLoading) return <div className="flex items-center justify-center min-h-screen"><div className="animate-pulse">Cargando...</div></div>;
@@ -106,13 +114,14 @@ export default function Bills() {
                 </div>
                 <div>
                   <Label htmlFor="payment_type">Tipo de Pago</Label>
-                  <Select value={formData.payment_type} onValueChange={(val: any) => setFormData({ ...formData, payment_type: val })}>
+                  <Select value={formData.payment_type.toString()} onValueChange={(val) => setFormData({ ...formData, payment_type: parseInt(val) })}>
                     <SelectTrigger className="bg-zinc-800 border-zinc-700"><SelectValue /></SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="cash">Efectivo</SelectItem>
-                      <SelectItem value="credit_card">Tarjeta de Crédito</SelectItem>
-                      <SelectItem value="debit_card">Tarjeta de Débito</SelectItem>
-                      <SelectItem value="transfer">Transferencia</SelectItem>
+                      <SelectItem value="1">Efectivo</SelectItem>
+                      <SelectItem value="2">Tarjeta</SelectItem>
+                      <SelectItem value="3">Débito</SelectItem>
+                      <SelectItem value="4">Crédito</SelectItem>
+                      <SelectItem value="5">Transferencia</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -146,7 +155,7 @@ export default function Bills() {
               <div className="flex items-center gap-2 text-zinc-400"><Calendar className="h-4 w-4" />{new Date(bill.date).toLocaleDateString()}</div>
               <div className="flex items-center gap-2 text-emerald-400"><DollarSign className="h-4 w-4" /><span className="font-bold">${bill.total.toFixed(2)}</span></div>
               {bill.discount && bill.discount > 0 && <div className="text-xs text-yellow-500">Descuento: ${bill.discount.toFixed(2)}</div>}
-              <div className="text-xs capitalize text-zinc-500">Pago: {bill.payment_type.replace('_', ' ')}</div>
+              <div className="text-xs capitalize text-zinc-500">Pago: {paymentTypeLabels[bill.payment_type as number] || bill.payment_type}</div>
             </div>
           </div>
         ))}

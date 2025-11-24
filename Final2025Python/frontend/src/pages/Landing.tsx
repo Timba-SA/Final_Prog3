@@ -85,17 +85,19 @@ export default function Landing() {
     <div className="min-h-screen bg-zinc-950">
       {/* Hero Section */}
       <section className="relative overflow-hidden py-32 px-6">
-        {/* Animated background gradient */}
+        {/* Dynamic Animated Gradient Mesh Background */}
+        <div className="absolute inset-0 gradient-mesh opacity-40" />
         <motion.div
-          className="absolute inset-0 opacity-30"
+          className="absolute inset-0"
           animate={{
             background: [
-              'radial-gradient(circle at 20% 50%, rgba(34, 197, 94, 0.15) 0%, transparent 50%)',
-              'radial-gradient(circle at 80% 50%, rgba(34, 197, 94, 0.15) 0%, transparent 50%)',
-              'radial-gradient(circle at 20% 50%, rgba(34, 197, 94, 0.15) 0%, transparent 50%)',
+              'radial-gradient(circle at 20% 30%, rgba(34, 197, 94, 0.2) 0%, transparent 50%), radial-gradient(circle at 80% 70%, rgba(168, 85, 247, 0.15) 0%, transparent 50%)',
+              'radial-gradient(circle at 80% 30%, rgba(59, 130, 246, 0.15) 0%, transparent 50%), radial-gradient(circle at 20% 70%, rgba(34, 197, 94, 0.2) 0%, transparent 50%)',
+              'radial-gradient(circle at 50% 50%, rgba(168, 85, 247, 0.15) 0%, transparent 50%), radial-gradient(circle at 50% 50%, rgba(34, 197, 94, 0.2) 0%, transparent 50%)',
+              'radial-gradient(circle at 20% 30%, rgba(34, 197, 94, 0.2) 0%, transparent 50%), radial-gradient(circle at 80% 70%, rgba(168, 85, 247, 0.15) 0%, transparent 50%)',
             ],
           }}
-          transition={{ duration: 10, repeat: Infinity }}
+          transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
         />
 
         <div className="container mx-auto relative z-10">
@@ -125,7 +127,7 @@ export default function Landing() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
             >
-              <span className="bg-gradient-to-r from-white via-emerald-100 to-emerald-500 bg-clip-text text-transparent">
+              <span className="gradient-text-green">
                 CYBER
               </span>
               <br />
@@ -153,7 +155,7 @@ export default function Landing() {
               <Button
                 asChild
                 size="lg"
-                className="group bg-emerald-600 hover:bg-emerald-500 text-white px-8 py-6 text-lg font-bold cyber-glow"
+                className="group bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white px-8 py-6 text-lg font-bold cyber-glow-strong transition-smooth hover-lift"
               >
                 <Link to="/products" className="flex items-center gap-2">
                   <ShoppingBag className="h-5 w-5" />
@@ -166,7 +168,7 @@ export default function Landing() {
                 asChild
                 size="lg"
                 variant="outline"
-                className="px-8 py-6 text-lg font-bold border-2 border-zinc-700 hover:border-emerald-500 hover:text-emerald-500 transition-all"
+                className="px-8 py-6 text-lg font-bold border-2 border-zinc-700 hover:border-emerald-500 hover:text-emerald-500 transition-smooth hover-lift hover:bg-emerald-500/10"
               >
                 <Link to="/dashboard" className="flex items-center gap-2">
                   <Zap className="h-5 w-5" />
@@ -373,15 +375,23 @@ export default function Landing() {
       {/* CTA Section */}
       <section className="py-24 px-6 border-t border-zinc-800">
         <div className="container mx-auto">
-          <Card className="p-12 glassmorphism border-emerald-500/20 cyber-glow text-center">
+          <Card className="p-12 glassmorphism-strong border-emerald-500/30 cyber-glow-strong text-center relative overflow-hidden">
+            {/* Animated background for CTA */}
+            <div className="absolute inset-0 gradient-radial-emerald opacity-30" />
             <motion.div
+              className="relative z-10"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
             >
-              <Zap className="h-16 w-16 text-emerald-500 mx-auto mb-6" />
-              <h2 className="text-4xl font-bold mb-4">
+              <motion.div
+                animate={{ rotate: [0, 5, -5, 0] }}
+                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+              >
+                <Zap className="h-16 w-16 text-emerald-500 mx-auto mb-6 drop-shadow-[0_0_15px_rgba(34,197,94,0.5)]" />
+              </motion.div>
+              <h2 className="text-4xl font-bold mb-4 shimmer">
                 ¿Listo para empezar tu experiencia Cyber?
               </h2>
               <p className="text-zinc-400 text-lg mb-8 max-w-2xl mx-auto">
@@ -391,17 +401,23 @@ export default function Landing() {
                 <Button
                   asChild
                   size="lg"
-                  className="bg-emerald-600 hover:bg-emerald-500 text-white px-8 cyber-glow"
+                  className="bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white px-8 py-6 text-lg font-bold cyber-glow-strong transition-smooth hover-lift"
                 >
-                  <Link to="/register">Crear Cuenta Gratis</Link>
+                  <Link to="/register" className="flex items-center gap-2">
+                    <Sparkles className="h-5 w-5" />
+                    Crear Cuenta Gratis
+                  </Link>
                 </Button>
                 <Button
                   asChild
                   size="lg"
-                  variant="ghost"
-                  className="hover:text-emerald-500"
+                  variant="outline"
+                  className="px-8 py-6 text-lg font-bold border-2 border-zinc-700 hover:border-emerald-500 hover:text-emerald-500 transition-smooth hover-lift hover:bg-emerald-500/10"
                 >
-                  <Link to="/login">Ya tengo cuenta</Link>
+                  <Link to="/login" className="flex items-center gap-2">
+                    Ya tengo cuenta
+                    <ArrowRight className="h-5 w-5" />
+                  </Link>
                 </Button>
               </div>
             </motion.div>

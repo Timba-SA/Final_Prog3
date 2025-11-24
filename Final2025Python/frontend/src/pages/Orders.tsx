@@ -16,8 +16,8 @@ export default function Orders() {
   const [formData, setFormData] = useState({
     date: new Date().toISOString().split('T')[0],
     total: 0,
-    delivery_method: 'pickup' as 'pickup' | 'delivery' | 'shipping',
-    status: 'pending' as 'pending' | 'confirmed' | 'shipped' | 'delivered' | 'cancelled',
+    delivery_method: 1, // Default to DRIVE_THRU (1) or whatever default
+    status: 1, // Default to PENDING (1)
     client_id: 0,
     bill_id: 0,
   });
@@ -55,20 +55,32 @@ export default function Orders() {
     setFormData({
       date: order.date.split('T')[0],
       total: order.total,
-      delivery_method: order.delivery_method,
-      status: order.status,
+      delivery_method: order.delivery_method as number,
+      status: order.status as number,
       client_id: order.client_id,
       bill_id: order.bill_id,
     });
     setIsDialogOpen(true);
   };
 
-  const statusColors = {
-    pending: 'bg-yellow-500/20 text-yellow-500',
-    confirmed: 'bg-blue-500/20 text-blue-500',
-    shipped: 'bg-purple-500/20 text-purple-500',
-    delivered: 'bg-emerald-500/20 text-emerald-500',
-    cancelled: 'bg-rose-500/20 text-rose-500',
+  const statusColors: Record<number, string> = {
+    1: 'bg-yellow-500/20 text-yellow-500', // PENDING
+    2: 'bg-blue-500/20 text-blue-500',     // IN_PROGRESS (Confirmed)
+    3: 'bg-emerald-500/20 text-emerald-500', // DELIVERED
+    4: 'bg-rose-500/20 text-rose-500',     // CANCELED
+  };
+
+  const statusLabels: Record<number, string> = {
+    1: 'Pendiente',
+    2: 'En Progreso',
+    3: 'Entregado',
+    4: 'Cancelado',
+  };
+
+  const deliveryMethodLabels: Record<number, string> = {
+    1: 'Drive Thru',
+    2: 'Retiro en Local',
+    3: 'Envío a Domicilio',
   };
 
   if (isLoading) return <div className="flex items-center justify-center min-h-screen"><div className="animate-pulse">Cargando...</div></div>;
@@ -114,25 +126,24 @@ export default function Orders() {
                 </div>
                 <div>
                   <Label htmlFor="delivery_method">Método de Entrega</Label>
-                  <Select value={formData.delivery_method} onValueChange={(val: any) => setFormData({ ...formData, delivery_method: val })}>
+                  <Select value={formData.delivery_method.toString()} onValueChange={(val) => setFormData({ ...formData, delivery_method: parseInt(val) })}>
                     <SelectTrigger className="bg-zinc-800 border-zinc-700"><SelectValue /></SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="pickup">Retiro</SelectItem>
-                      <SelectItem value="delivery">Entrega</SelectItem>
-                      <SelectItem value="shipping">Envío</SelectItem>
+                      <SelectItem value="1">Drive Thru</SelectItem>
+                      <SelectItem value="2">Retiro en Local</SelectItem>
+                      <SelectItem value="3">Envío a Domicilio</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
                 <div>
                   <Label htmlFor="status">Estado</Label>
-                  <Select value={formData.status} onValueChange={(val: any) => setFormData({ ...formData, status: val })}>
+                  <Select value={formData.status.toString()} onValueChange={(val) => setFormData({ ...formData, status: parseInt(val) })}>
                     <SelectTrigger className="bg-zinc-800 border-zinc-700"><SelectValue /></SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="pending">Pendiente</SelectItem>
-                      <SelectItem value="confirmed">Confirmado</SelectItem>
-                      <SelectItem value="shipped">Enviado</SelectItem>
-                      <SelectItem value="delivered">Entregado</SelectItem>
-                      <SelectItem value="cancelled">Cancelado</SelectItem>
+                      <SelectItem value="1">Pendiente</SelectItem>
+                      <SelectItem value="2">En Progreso</SelectItem>
+                      <SelectItem value="3">Entregado</SelectItem>
+                      <SelectItem value="4">Cancelado</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -164,8 +175,8 @@ export default function Orders() {
             </div>
             <div className="space-y-2 text-sm">
               <div className="flex justify-between"><span className="text-zinc-400">Total:</span><span className="font-bold">${order.total.toFixed(2)}</span></div>
-              <div className="flex justify-between"><span className="text-zinc-400">Entrega:</span><span className="capitalize">{order.delivery_method}</span></div>
-              <div className={`inline-block px-2 py-1 rounded-full text-xs ${statusColors[order.status]}`}>{order.status}</div>
+              <div className="flex justify-between"><span className="text-zinc-400">Entrega:</span><span className="capitalize">{deliveryMethodLabels[order.delivery_method as number] || order.delivery_method}</span></div>
+              <div className={`inline-block px-2 py-1 rounded-full text-xs ${statusColors[order.status as number] || 'bg-gray-500/20 text-gray-500'}`}>{statusLabels[order.status as number] || order.status}</div>
             </div>
           </div>
         ))}

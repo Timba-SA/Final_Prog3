@@ -28,16 +28,21 @@ export default function Cart() {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5 }}
         >
-          <Card className="p-12 text-center glassmorphism border-zinc-800 max-w-md">
-            <ShoppingCart className="h-20 w-20 text-zinc-700 mx-auto mb-6" />
-            <h2 className="text-3xl font-bold mb-4">Tu carrito está vacío</h2>
+          <Card className="p-12 text-center glassmorphism-strong border-zinc-800 max-w-md hover-lift">
+            <motion.div
+              animate={{ scale: [1, 1.1, 1] }}
+              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+            >
+              <ShoppingCart className="h-20 w-20 text-zinc-700 mx-auto mb-6" />
+            </motion.div>
+            <h2 className="text-3xl font-bold mb-4 shimmer">Tu carrito está vacío</h2>
             <p className="text-zinc-400 mb-8">
               Empezá a agregar productos para poder realizar tu compra
             </p>
             <Button
               asChild
               size="lg"
-              className="bg-emerald-600 hover:bg-emerald-500 text-white cyber-glow"
+              className="bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white cyber-glow-strong transition-smooth hover-lift"
             >
               <Link to="/products" className="flex items-center gap-2">
                 Explorar Productos
@@ -69,7 +74,7 @@ export default function Cart() {
               Seguir comprando
             </Link>
           </Button>
-          
+
           <div className="flex items-center gap-4">
             <ShoppingCart className="h-10 w-10 text-emerald-500" />
             <div>
@@ -91,12 +96,20 @@ export default function Cart() {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: index * 0.1 }}
               >
-                <Card className="p-6 glassmorphism border-zinc-800">
+                <Card className="p-6 glassmorphism-strong border-zinc-800 hover:border-emerald-500/30 transition-smooth hover-lift">
                   <div className="flex gap-6">
                     {/* Product Image */}
                     <div className="flex-shrink-0">
-                      <div className="w-24 h-24 bg-zinc-900 rounded-lg flex items-center justify-center">
-                        <Package className="h-10 w-10 text-zinc-700" />
+                      <div className="w-24 h-24 bg-gradient-to-br from-zinc-800 to-zinc-900 rounded-lg flex items-center justify-center overflow-hidden">
+                        {item.product.image_url ? (
+                          <img
+                            src={item.product.image_url}
+                            alt={item.product.name}
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <Package className="h-10 w-10 text-zinc-600" />
+                        )}
                       </div>
                     </div>
 
@@ -144,11 +157,11 @@ export default function Cart() {
                         >
                           <Minus className="h-4 w-4" />
                         </Button>
-                        
+
                         <span className="text-lg font-bold w-8 text-center">
                           {item.quantity}
                         </span>
-                        
+
                         <Button
                           variant="outline"
                           size="icon"
@@ -191,15 +204,15 @@ export default function Cart() {
             transition={{ delay: 0.2 }}
             className="lg:col-span-1"
           >
-            <Card className="p-6 glassmorphism border-zinc-800 sticky top-24">
-              <h2 className="text-2xl font-bold mb-6">Resumen de Compra</h2>
+            <Card className="p-6 glassmorphism-strong border-emerald-500/20 cyber-glow sticky top-24 hover-lift">
+              <h2 className="text-2xl font-bold mb-6 shimmer">Resumen de Compra</h2>
 
               <div className="space-y-4 mb-6">
                 <div className="flex justify-between text-lg">
                   <span className="text-zinc-400">Productos ({totalItems})</span>
                   <span className="font-medium">${totalPrice.toFixed(2)}</span>
                 </div>
-                
+
                 <div className="flex justify-between text-lg">
                   <span className="text-zinc-400">Envío</span>
                   <span className="font-medium text-emerald-500">GRATIS</span>
@@ -216,7 +229,7 @@ export default function Cart() {
               <Button
                 size="lg"
                 onClick={() => navigate('/checkout')}
-                className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold cyber-glow mb-4"
+                className="w-full bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white font-bold cyber-glow-strong transition-smooth hover-lift pulse-glow mb-4"
               >
                 Proceder al Checkout
                 <ArrowRight className="h-5 w-5 ml-2" />
@@ -226,7 +239,7 @@ export default function Cart() {
                 asChild
                 variant="outline"
                 size="lg"
-                className="w-full border-zinc-700 hover:border-emerald-500 hover:text-emerald-500"
+                className="w-full border-zinc-700 hover:border-emerald-500 hover:text-emerald-500 transition-smooth hover:bg-emerald-500/10"
               >
                 <Link to="/products">Agregar más productos</Link>
               </Button>
