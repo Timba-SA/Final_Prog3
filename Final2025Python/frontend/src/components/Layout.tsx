@@ -3,8 +3,6 @@ import { useCartStore } from '@/store/cartStore';
 import { useAuthStore } from '@/store/authStore';
 import { 
   ShoppingCart, 
-  LayoutDashboard, 
-  Package, 
   Zap, 
   Home,
   LogIn,
@@ -21,60 +19,36 @@ export default function Layout() {
   const { user, isAuthenticated, logout } = useAuthStore();
   const cartItemsCount = getTotalItems();
 
-  const mainNavItems = [
-    { path: '/', label: 'Home', icon: Home },
-    { path: '/products', label: 'Catálogo', icon: Package },
-    { path: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  ];
-
-  const isActive = (path: string) => {
-    if (path === '/') {
-      return location.pathname === '/';
-    }
-    return location.pathname.startsWith(path);
-  };
-
   return (
     <div className="min-h-screen bg-zinc-950">
       {/* Navigation */}
       <nav className="glassmorphism border-b border-zinc-800 sticky top-0 z-50 backdrop-blur-md">
         <div className="container mx-auto px-6">
           <div className="flex items-center justify-between h-16">
-            {/* Logo */}
-            <Link to="/" className="flex items-center gap-2 group">
-              <div className="relative">
-                <Zap className="h-8 w-8 text-emerald-500 group-hover:text-emerald-400 transition-colors" />
-                <div className="absolute inset-0 bg-emerald-500/20 blur-xl group-hover:bg-emerald-400/30 transition-colors" />
-              </div>
-              <span className="text-xl font-bold tracking-tight">
-                Cyber<span className="text-emerald-500">Store</span>
-              </span>
-            </Link>
+            {/* Left Side: Home Button + Logo */}
+            <div className="flex items-center gap-4">
+              {/* Home Button (Icon Only) */}
+              <Button
+                asChild
+                variant="ghost"
+                size="sm"
+                className="text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800"
+              >
+                <Link to="/" className="flex items-center">
+                  <Home className="h-5 w-5" />
+                </Link>
+              </Button>
 
-            {/* Main Nav Links */}
-            <div className="flex items-center gap-1">
-              {mainNavItems.map((item) => {
-                const Icon = item.icon;
-                const active = isActive(item.path);
-                
-                return (
-                  <Link
-                    key={item.path}
-                    to={item.path}
-                    className={`
-                      flex items-center gap-2 px-4 py-2 rounded-lg transition-all
-                      ${
-                        active
-                          ? 'bg-emerald-600 text-white cyber-glow'
-                          : 'text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800'
-                      }
-                    `}
-                  >
-                    <Icon className="h-4 w-4" />
-                    <span className="font-medium">{item.label}</span>
-                  </Link>
-                );
-              })}
+              {/* Logo */}
+              <Link to="/" className="flex items-center gap-2 group">
+                <div className="relative">
+                  <Zap className="h-8 w-8 text-emerald-500 group-hover:text-emerald-400 transition-colors" />
+                  <div className="absolute inset-0 bg-emerald-500/20 blur-xl group-hover:bg-emerald-400/30 transition-colors" />
+                </div>
+                <span className="text-xl font-bold tracking-tight">
+                  Cyber<span className="text-emerald-500">Store</span>
+                </span>
+              </Link>
             </div>
 
             {/* Right Side Actions */}
@@ -111,6 +85,17 @@ export default function Layout() {
                       {user.name}
                     </span>
                   </div>
+                  <Button
+                    asChild
+                    variant="ghost"
+                    size="sm"
+                    className="text-zinc-400 hover:text-emerald-500 hover:bg-emerald-500/10"
+                  >
+                    <Link to="/profile" className="flex items-center">
+                      <User className="h-4 w-4" />
+                      <span className="ml-2 hidden sm:inline">Perfil</span>
+                    </Link>
+                  </Button>
                   <Button
                     onClick={logout}
                     variant="ghost"
@@ -180,6 +165,11 @@ export default function Layout() {
                 <li>
                   <Link to="/products" className="text-zinc-500 hover:text-emerald-500 transition-colors">
                     Catálogo
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/categories" className="text-zinc-500 hover:text-emerald-500 transition-colors">
+                    Categorías
                   </Link>
                 </li>
                 <li>

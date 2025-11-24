@@ -3,15 +3,17 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import type { Product } from '@/types/api';
 import { useCartStore } from '@/store/cartStore';
-import { ShoppingCart, AlertCircle, Package } from 'lucide-react';
+import { ShoppingCart, AlertCircle, Package, Pencil, Trash2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 interface ProductCardProps {
   product: Product;
   index: number;
+  onEdit?: (product: Product) => void;
+  onDelete?: (id: number, name: string) => void;
 }
 
-export function ProductCard({ product, index }: ProductCardProps) {
+export function ProductCard({ product, index, onEdit, onDelete }: ProductCardProps) {
   const { addItem, getItemQuantity } = useCartStore();
   const cartQuantity = getItemQuantity(product.id_key);
 
@@ -41,6 +43,32 @@ export function ProductCard({ product, index }: ProductCardProps) {
             />
           ) : (
             <Package className="h-16 w-16 text-zinc-600" />
+          )}
+
+          {/* Admin Actions */}
+          {(onEdit || onDelete) && (
+            <div className="absolute top-3 left-3 flex gap-2">
+              {onEdit && (
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => onEdit(product)}
+                  className="h-8 w-8 p-0 bg-zinc-900/80 hover:bg-emerald-600 backdrop-blur-sm"
+                >
+                  <Pencil className="h-4 w-4" />
+                </Button>
+              )}
+              {onDelete && (
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => onDelete(product.id_key, product.name)}
+                  className="h-8 w-8 p-0 bg-zinc-900/80 hover:bg-red-600 backdrop-blur-sm"
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              )}
+            </div>
           )}
 
           {/* Stock Badge */}

@@ -1,22 +1,95 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { productsService } from '@/services/api';
 import { ProductCard } from '@/components/products/ProductCard';
+import { ProductForm } from '@/components/products/ProductForm';
 import { useCartStore } from '@/store/cartStore';
-import { ShoppingBag, Package, AlertCircle } from 'lucide-react';
+import { ShoppingBag, Package, AlertCircle, Plus } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
+import { useState } from 'react';
+import type { Product } from '@/types/api';
 
 export default function Products() {
+  const queryClient = useQueryClient();
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [editingProduct, setEditingProduct] = useState<Product | null>(null);
+
   const { data: products, isLoading, error } = useQuery({
     queryKey: ['products'],
     queryFn: productsService.getAll,
-    staleTime: 30000, // Cache por 30 segundos
+    staleTime: 30000,
   });
 
   const { getTotalItems, getTotalPrice } = useCartStore();
   const cartItemsCount = getTotalItems();
   const cartTotal = getTotalPrice();
+
+  // Create Product Mutation
+  const createMutation = useMutation({
+    mutationFn: productsService.create,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['products'] });
+      setIsFormOpen(false);
+      alert('✅ Product created successfully!');
+    },
+    onError: (error: any) => {
+      alert(`❌ Error creating product: ${error.message}`);
+    },
+  });
+
+  // Update Product Mutation
+  const updateMutation = useMutation({
+    mutationFn: ({ id, data }: { id: number; data: Partial<Product> }) =>
+      productsService.update(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['products'] });
+      setIsFormOpen(false);
+      setEditingProduct(null);
+      alert('✅ Product updated successfully!');
+    },
+    onError: (error: any) => {
+      alert(`❌ Error updating product: ${error.message}`);
+    },
+  });
+
+  // Delete Product Mutation
+  const deleteMutation = useMutation({
+    mutationFn: productsService.delete,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['products'] });
+      alert('✅ Product deleted successfully!');
+    },
+    onError: (error: any) => {
+      alert(`❌ Error deleting product: ${error.message}`);
+    },
+  });
+
+  const handleCreateProduct = (data: any) => {
+    createMutation.mutate(data);
+  };
+
+  const handleUpdateProduct = (data: any) => {
+    if (editingProduct) {
+      updateMutation.mutate({ id: editingProduct.id_key, data });
+    }
+  };
+
+  const handleDeleteProduct = (id: number, name: string) => {
+    if (window.confirm(`Are you sure you want to delete "${name}"?`)) {
+      deleteMutation.mutate(id);
+    }
+  };
+
+  const handleEditProduct = (product: Product) => {
+    setEditingProduct(product);
+    setIsFormOpen(true);
+  };
+
+  const handleOpenCreate = () => {
+    setEditingProduct(null);
+    setIsFormOpen(true);
+  };
 
   if (isLoading) {
     return (
@@ -73,6 +146,15 @@ export default function Products() {
           </p>
         </div>
 
+        <Button
+          onClick={handleOpenCreate}
+          size="lg"
+          className="bg-emerald-600 hover:bg-emerald-500 cyber-glow"
+        >
+          <Plus className="h-5 w-5 mr-2" />
+          Add Product
+        </Button>
+
         {/* Cart Summary */}
         {cartItemsCount > 0 && (
           <motion.div
@@ -111,7 +193,13 @@ export default function Products() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {activeProducts.map((product, index) => (
-            <ProductCard key={product.id_key} product={product} index={index} />
+            <ProductCard
+              key={product.id_key}
+              product={product}
+              index={index}
+              onEdit={handleEditProduct}
+              onDelete={handleDeleteProduct}
+            />
           ))}
         </div>
       )}
@@ -136,6 +224,15 @@ export default function Products() {
           </div>
         </motion.div>
       )}
+
+      {/* Product Form Dialog */}
+      <ProductForm
+        open={isFormOpen}
+        onOpenChange={setIsFormOpen}
+        product={editingProduct}
+        onSubmit={editingProduct ? handleUpdateProduct : handleCreateProduct}
+        isPending={createMutation.isPending || updateMutation.isPending}
+      />
     </div>
   );
 }

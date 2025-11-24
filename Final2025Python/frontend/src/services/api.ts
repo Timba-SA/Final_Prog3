@@ -21,7 +21,7 @@ export const productsService = {
   },
   
   getById: async (id: number): Promise<Product> => {
-    const response = await apiClient.get<Product>(`/products/${id}/`);
+    const response = await apiClient.get<Product>(`/products/${id}`);
     return response.data;
   },
   
@@ -31,12 +31,12 @@ export const productsService = {
   },
   
   update: async (id: number, product: Partial<Product>): Promise<Product> => {
-    const response = await apiClient.put<Product>(`/products/${id}/`, product);
+    const response = await apiClient.put<Product>(`/products/${id}`, product);
     return response.data;
   },
   
   delete: async (id: number): Promise<void> => {
-    await apiClient.delete(`/products/${id}/`);
+    await apiClient.delete(`/products/${id}`);
   },
 };
 
@@ -50,7 +50,7 @@ export const categoriesService = {
   },
   
   getById: async (id: number): Promise<Category> => {
-    const response = await apiClient.get<Category>(`/categories/${id}/`);
+    const response = await apiClient.get<Category>(`/categories/${id}`);
     return response.data;
   },
 
@@ -60,12 +60,12 @@ export const categoriesService = {
   },
   
   update: async (id: number, category: Partial<Category>): Promise<Category> => {
-    const response = await apiClient.put<Category>(`/categories/${id}/`, category);
+    const response = await apiClient.put<Category>(`/categories/${id}`, category);
     return response.data;
   },
   
   delete: async (id: number): Promise<void> => {
-    await apiClient.delete(`/categories/${id}/`);
+    await apiClient.delete(`/categories/${id}`);
   },
 };
 
@@ -79,7 +79,7 @@ export const clientsService = {
   },
   
   getById: async (id: number): Promise<Client> => {
-    const response = await apiClient.get<Client>(`/clients/${id}/`);
+    const response = await apiClient.get<Client>(`/clients/${id}`);
     return response.data;
   },
   
@@ -89,12 +89,12 @@ export const clientsService = {
   },
   
   update: async (id: number, client: Partial<Client>): Promise<Client> => {
-    const response = await apiClient.put<Client>(`/clients/${id}/`, client);
+    const response = await apiClient.put<Client>(`/clients/${id}`, client);
     return response.data;
   },
   
   delete: async (id: number): Promise<void> => {
-    await apiClient.delete(`/clients/${id}/`);
+    await apiClient.delete(`/clients/${id}`);
   },
 };
 
@@ -108,7 +108,7 @@ export const addressesService = {
   },
   
   getById: async (id: number): Promise<Address> => {
-    const response = await apiClient.get<Address>(`/addresses/${id}/`);
+    const response = await apiClient.get<Address>(`/addresses/${id}`);
     return response.data;
   },
   
@@ -118,12 +118,12 @@ export const addressesService = {
   },
   
   update: async (id: number, address: Partial<Address>): Promise<Address> => {
-    const response = await apiClient.put<Address>(`/addresses/${id}/`, address);
+    const response = await apiClient.put<Address>(`/addresses/${id}`, address);
     return response.data;
   },
   
   delete: async (id: number): Promise<void> => {
-    await apiClient.delete(`/addresses/${id}/`);
+    await apiClient.delete(`/addresses/${id}`);
   },
 };
 
@@ -137,7 +137,7 @@ export const billsService = {
   },
   
   getById: async (id: number): Promise<Bill> => {
-    const response = await apiClient.get<Bill>(`/bills/${id}/`);
+    const response = await apiClient.get<Bill>(`/bills/${id}`);
     return response.data;
   },
   
@@ -147,12 +147,12 @@ export const billsService = {
   },
   
   update: async (id: number, bill: Partial<Bill>): Promise<Bill> => {
-    const response = await apiClient.put<Bill>(`/bills/${id}/`, bill);
+    const response = await apiClient.put<Bill>(`/bills/${id}`, bill);
     return response.data;
   },
   
   delete: async (id: number): Promise<void> => {
-    await apiClient.delete(`/bills/${id}/`);
+    await apiClient.delete(`/bills/${id}`);
   },
 };
 
@@ -166,7 +166,7 @@ export const ordersService = {
   },
   
   getById: async (id: number): Promise<Order> => {
-    const response = await apiClient.get<Order>(`/orders/${id}/`);
+    const response = await apiClient.get<Order>(`/orders/${id}`);
     return response.data;
   },
   
@@ -176,12 +176,12 @@ export const ordersService = {
   },
   
   update: async (id: number, order: Partial<Order>): Promise<Order> => {
-    const response = await apiClient.put<Order>(`/orders/${id}/`, order);
+    const response = await apiClient.put<Order>(`/orders/${id}`, order);
     return response.data;
   },
   
   delete: async (id: number): Promise<void> => {
-    await apiClient.delete(`/orders/${id}/`);
+    await apiClient.delete(`/orders/${id}`);
   },
 };
 
@@ -195,7 +195,7 @@ export const orderDetailsService = {
   },
   
   getById: async (id: number): Promise<OrderDetail> => {
-    const response = await apiClient.get<OrderDetail>(`/order_details/${id}/`);
+    const response = await apiClient.get<OrderDetail>(`/order_details/${id}`);
     return response.data;
   },
   
@@ -205,12 +205,12 @@ export const orderDetailsService = {
   },
   
   update: async (id: number, orderDetail: Partial<OrderDetail>): Promise<OrderDetail> => {
-    const response = await apiClient.put<OrderDetail>(`/order_details/${id}/`, orderDetail);
+    const response = await apiClient.put<OrderDetail>(`/order_details/${id}`, orderDetail);
     return response.data;
   },
   
   delete: async (id: number): Promise<void> => {
-    await apiClient.delete(`/order_details/${id}/`);
+    await apiClient.delete(`/order_details/${id}`);
   },
 };
 
@@ -224,7 +224,7 @@ export const reviewsService = {
   },
   
   getById: async (id: number): Promise<Review> => {
-    const response = await apiClient.get<Review>(`/reviews/${id}/`);
+    const response = await apiClient.get<Review>(`/reviews/${id}`);
     return response.data;
   },
   
@@ -234,12 +234,12 @@ export const reviewsService = {
   },
   
   update: async (id: number, review: Partial<Review>): Promise<Review> => {
-    const response = await apiClient.put<Review>(`/reviews/${id}/`, review);
+    const response = await apiClient.put<Review>(`/reviews/${id}`, review);
     return response.data;
   },
   
   delete: async (id: number): Promise<void> => {
-    await apiClient.delete(`/reviews/${id}/`);
+    await apiClient.delete(`/reviews/${id}`);
   },
 };
 

@@ -1,108 +1,217 @@
-import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { categoriesService } from '@/services/api';
-import type { Category } from '@/types/api';
-import { FolderTree, Plus, Edit, Trash2 } from 'lucide-react';
+import { CategoryForm } from '@/components/categories/CategoryForm';
+import { Tag, Plus, Pencil, Trash2 } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { motion } from 'framer-motion';
+import { useState } from 'react';
+import type { Category } from '@/types/api';
 
 export default function Categories() {
   const queryClient = useQueryClient();
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingCategory, setEditingCategory] = useState<Category | null>(null);
-  const [formData, setFormData] = useState({ name: '' });
 
   const { data: categories = [], isLoading } = useQuery({
     queryKey: ['categories'],
     queryFn: categoriesService.getAll,
+    staleTime: 60000,
   });
 
+  // Create Category Mutation
   const createMutation = useMutation({
     mutationFn: categoriesService.create,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['categories'] });
-      setIsDialogOpen(false);
-      setFormData({ name: '' });
+      setIsFormOpen(false);
+      alert('✅ Category created successfully!');
+    },
+    onError: (error: any) => {
+      alert(`❌ Error creating category: ${error.message}`);
     },
   });
 
+  // Update Category Mutation
   const updateMutation = useMutation({
-    mutationFn: ({ id, data }: { id: number; data: Partial<Category> }) => categoriesService.update(id, data),
+    mutationFn: ({ id, data }: { id: number; data: Partial<Category> }) =>
+      categoriesService.update(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['categories'] });
-      setIsDialogOpen(false);
-      setFormData({ name: '' });
+      setIsFormOpen(false);
       setEditingCategory(null);
+      alert('✅ Category updated successfully!');
+    },
+    onError: (error: any) => {
+      alert(`❌ Error updating category: ${error.message}`);
     },
   });
 
+  // Delete Category Mutation
   const deleteMutation = useMutation({
     mutationFn: categoriesService.delete,
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['categories'] }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['categories'] });
+      alert('✅ Category deleted successfully!');
+    },
+    onError: (error: any) => {
+      alert(`❌ Error deleting category: ${error.message}`);
+    },
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleCreateCategory = (data: any) => {
+    createMutation.mutate(data);
+  };
+
+  const handleUpdateCategory = (data: any) => {
     if (editingCategory) {
-      updateMutation.mutate({ id: editingCategory.id_key, data: formData });
-    } else {
-      createMutation.mutate(formData as any);
+      updateMutation.mutate({ id: editingCategory.id_key, data });
     }
   };
 
-  const handleEdit = (category: Category) => {
-    setEditingCategory(category);
-    setFormData({ name: category.name });
-    setIsDialogOpen(true);
+  const handleDeleteCategory = (id: number, name: string) => {
+    if (window.confirm(`Are you sure you want to delete "${name}"?`)) {
+      deleteMutation.mutate(id);
+    }
   };
 
-  if (isLoading) return <div className="flex items-center justify-center min-h-screen"><div className="animate-pulse">Cargando...</div></div>;
+  const handleEditCategory = (category: Category) => {
+    setEditingCategory(category);
+    setIsFormOpen(true);
+  };
+
+  const handleOpenCreate = () => {
+    setEditingCategory(null);
+    setIsFormOpen(true);
+  };
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center space-y-4">
+          <div className="animate-pulse text-emerald-500">
+            <Tag className="h-12 w-12 mx-auto animate-spin" />
+          </div>
+          <p className="text-zinc-400">Loading categories...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto p-6 space-y-6">
+      {/* Header */}
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <FolderTree className="h-8 w-8 text-blue-500" />
-          <h1 className="text-3xl font-bold">Categorías</h1>
+        <div>
+          <h1 className="text-4xl font-bold tracking-tight flex items-center gap-3">
+            <Tag className="h-10 w-10 text-emerald-500" />
+            Product Categories
+          </h1>
+          <p className="text-zinc-400 mt-2">
+            Manage your product categories • {categories.length} total
+          </p>
         </div>
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogTrigger asChild>
-            <Button onClick={() => { setEditingCategory(null); setFormData({ name: '' }); }} className="bg-blue-600 hover:bg-blue-700">
-              <Plus className="h-4 w-4 mr-2" /> Nueva Categoría
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="glassmorphism border-zinc-700">
-            <DialogHeader><DialogTitle>{editingCategory ? 'Editar Categoría' : 'Nueva Categoría'}</DialogTitle></DialogHeader>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <Label htmlFor="name">Nombre</Label>
-                <Input id="name" value={formData.name} onChange={(e) => setFormData({ name: e.target.value })} required className="bg-zinc-800 border-zinc-700" />
-              </div>
-              <div className="flex gap-2">
-                <Button type="submit" className="flex-1 bg-blue-600 hover:bg-blue-700">{editingCategory ? 'Actualizar' : 'Crear'}</Button>
-                <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)} className="flex-1">Cancelar</Button>
-              </div>
-            </form>
-          </DialogContent>
-        </Dialog>
+
+        <Button
+          onClick={handleOpenCreate}
+          size="lg"
+          className="bg-emerald-600 hover:bg-emerald-500 cyber-glow"
+        >
+          <Plus className="h-5 w-5 mr-2" />
+          Add Category
+        </Button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        {categories.map((category) => (
-          <div key={category.id_key} className="glassmorphism rounded-lg p-4 hover:border-blue-500/50 transition-all">
-            <div className="flex items-center justify-between mb-2">
-              <h3 className="font-bold text-lg">{category.name}</h3>
-              <div className="flex gap-1">
-                <Button size="sm" variant="ghost" onClick={() => handleEdit(category)}><Edit className="h-4 w-4" /></Button>
-                <Button size="sm" variant="ghost" onClick={() => confirm('¿Eliminar?') && deleteMutation.mutate(category.id_key)} className="text-rose-500"><Trash2 className="h-4 w-4" /></Button>
-              </div>
-            </div>
-            <p className="text-xs text-zinc-500">ID: {category.id_key}</p>
-          </div>
-        ))}
-      </div>
+      {/* Categories Grid */}
+      {categories.length === 0 ? (
+        <div className="text-center py-20">
+          <Tag className="h-16 w-16 mx-auto text-zinc-600 mb-4" />
+          <h3 className="text-xl font-semibold text-zinc-300 mb-2">
+            No Categories Yet
+          </h3>
+          <p className="text-zinc-500 mb-6">
+            Create your first product category to get started.
+          </p>
+          <Button
+            onClick={handleOpenCreate}
+            size="lg"
+            className="bg-emerald-600 hover:bg-emerald-500 cyber-glow"
+          >
+            <Plus className="h-5 w-5 mr-2" />
+            Create First Category
+          </Button>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {categories.map((category, index) => (
+            <motion.div
+              key={category.id_key}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.05, duration: 0.3 }}
+            >
+              <Card className="glassmorphism transition-all duration-300 hover:scale-105 hover:border-emerald-500/50">
+                <CardHeader className="pb-3">
+                  <div className="flex items-start justify-between">
+                    <div className="flex items-center gap-2">
+                      <Tag className="h-5 w-5 text-emerald-500" />
+                      <CardTitle className="text-lg">{category.name}</CardTitle>
+                    </div>
+                    <div className="flex gap-1">
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => handleEditCategory(category)}
+                        className="h-8 w-8 p-0 hover:bg-emerald-600 hover:text-white"
+                      >
+                        <Pencil className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() =>
+                          handleDeleteCategory(category.id_key, category.name)
+                        }
+                        className="h-8 w-8 p-0 hover:bg-red-600 hover:text-white"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between text-xs text-zinc-500">
+                      <span>Category ID</span>
+                      <Badge variant="outline" className="font-mono">
+                        #{category.id_key}
+                      </Badge>
+                    </div>
+                    <div className="flex items-center justify-between text-xs text-zinc-500">
+                      <span>Created</span>
+                      <span className="font-mono">
+                        {new Date(category.created_at).toLocaleDateString()}
+                      </span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+          ))}
+        </div>
+      )}
+
+      {/* Category Form Dialog */}
+      <CategoryForm
+        open={isFormOpen}
+        onOpenChange={setIsFormOpen}
+        category={editingCategory}
+        onSubmit={
+          editingCategory ? handleUpdateCategory : handleCreateCategory
+        }
+        isPending={createMutation.isPending || updateMutation.isPending}
+      />
     </div>
   );
 }
