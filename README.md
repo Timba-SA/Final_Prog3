@@ -1002,26 +1002,109 @@ Toda la documentación está consolidada en este README. Para detalles de implem
 
 ---
 
-## 📝 Licencia
+## 📝 Licencias
 
-Este proyecto fue desarrollado como parte del trabajo final de Programación 3er Semestre.
+### Licencias de Software Utilizado
+
+Este proyecto utiliza las siguientes tecnologías de código abierto:
+
+#### Backend
+- **FastAPI** - [MIT License](https://github.com/tiangolo/fastapi/blob/master/LICENSE)
+- **Python** - [PSF License](https://docs.python.org/3/license.html)
+- **PostgreSQL** - [PostgreSQL License](https://www.postgresql.org/about/licence/)
+- **Redis** - [BSD 3-Clause License](https://redis.io/topics/license)
+- **SQLAlchemy** - [MIT License](https://github.com/sqlalchemy/sqlalchemy/blob/main/LICENSE)
+- **Pydantic** - [MIT License](https://github.com/pydantic/pydantic/blob/main/LICENSE)
+- **Uvicorn** - [BSD 3-Clause License](https://github.com/encode/uvicorn/blob/master/LICENSE.md)
+
+#### Frontend
+- **React** - [MIT License](https://github.com/facebook/react/blob/main/LICENSE)
+- **TypeScript** - [Apache License 2.0](https://github.com/microsoft/TypeScript/blob/main/LICENSE.txt)
+- **Vite** - [MIT License](https://github.com/vitejs/vite/blob/main/LICENSE)
+- **TanStack Query** - [MIT License](https://github.com/TanStack/query/blob/main/LICENSE)
+- **Zustand** - [MIT License](https://github.com/pmndrs/zustand/blob/main/LICENSE)
+- **Tailwind CSS** - [MIT License](https://github.com/tailwindlabs/tailwindcss/blob/master/LICENSE)
+
+### Licencia del Proyecto
+
+**Copyright © 2025 Timba-SA**
+
+Este proyecto fue desarrollado como parte del trabajo final de **Programación 3er Semestre**.
+
+El código fuente de este proyecto está disponible para fines educativos y de demostración.
+
+---
+
+## 📄 Términos y Condiciones
+
+### Uso del Sistema
+
+1. **Propósito Educativo**: Este sistema fue desarrollado con fines académicos y de aprendizaje.
+
+2. **Uso Permitido**: 
+   - Fines educativos y de investigación
+   - Evaluación de código y arquitectura
+   - Aprendizaje de mejores prácticas
+
+3. **Restricciones**:
+   - No utilizar en producción sin revisión de seguridad completa
+   - No redistribuir sin atribución apropiada
+   - Mantener créditos y licencias originales
+
+4. **Garantía**: Este software se proporciona "tal cual", sin garantías de ningún tipo, expresas o implícitas.
+
+5. **Responsabilidad**: Los autores no son responsables de ningún daño derivado del uso de este software.
+
+---
+
+## 📞 Contacto
+
+**Ubicación**: Mendoza, Argentina 🇦🇷
+
+**Proyecto**: Timba-SA E-commerce Platform
+
+**Repositorio**: [GitHub Repository](https://github.com/Timba-SA/Final_Prog3)
+
+Para consultas sobre el proyecto o colaboraciones, por favor utilizar el sistema de Issues del repositorio.
 
 ---
 
 ## 🙏 Agradecimientos
 
-- **FastAPI** - Por el increíble framework
-- **React** - Por la poderosa librería UI
-- **Shadcn/ui** - Por los hermosos componentes
-- **PostgreSQL** - Por el almacenamiento de datos confiable
-- **Redis** - Por el caché ultra-rápido
+- **FastAPI** - Por el increíble framework web moderno
+- **React** - Por la poderosa librería UI con Concurrent Features
+- **Shadcn/ui** - Por los hermosos componentes accesibles
+- **PostgreSQL** - Por el sistema de base de datos robusto y confiable
+- **Redis** - Por el sistema de caché en memoria ultra-rápido
+- **Docker** - Por simplificar el despliegue y desarrollo
+- **La Comunidad Open Source** - Por hacer posible proyectos como este
 
 ---
 
 <div align="center">
 
-**Construido con ❤️ usando FastAPI + React + PostgreSQL + Redis**
+### 💻 Stack Tecnológico
 
-[⬆ Volver Arriba](#-plataforma-e-commerce-timba-sa)
+**Backend**: FastAPI + Python + PostgreSQL + Redis + SQLAlchemy  
+**Frontend**: React + TypeScript + Vite + TanStack Query + Zustand + Tailwind CSS  
+**DevOps**: Docker + Docker Compose + Nginx
+
+---
+
+**Construido con ❤️ en Mendoza, Argentina**
+
+**Universidad**: Trabajo Final - Programación 3er Semestre  
+**Año**: 2025
+
+---
+
+[⬆ Volver Arriba](#-plataforma-e-commerce-timba-sa) | 
+[📚 Documentación](#-documentación) | 
+[🚀 Inicio Rápido](#-inicio-rápido) | 
+[📞 Contacto](#-contacto)
+
+---
+
+**Timba-SA E-commerce Platform** - Sistema de E-commerce Full-Stack de Nivel Empresarial
 
 </div>
