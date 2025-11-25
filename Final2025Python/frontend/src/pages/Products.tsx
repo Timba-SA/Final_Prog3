@@ -143,8 +143,6 @@ export default function Products() {
 
   return (
     <div className="min-h-screen relative">
-      {/* Animated Background */}
-      <div className="fixed inset-0 gradient-mesh opacity-30 pointer-events-none" />
 
       <div className="container mx-auto p-6 space-y-8 relative z-10">
         {/* Header */}

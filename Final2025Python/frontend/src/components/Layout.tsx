@@ -1,9 +1,9 @@
 import { Outlet, Link, useLocation } from 'react-router-dom';
 import { useCartStore } from '@/store/cartStore';
 import { useAuthStore } from '@/store/authStore';
-import { 
-  ShoppingCart, 
-  Zap, 
+import {
+  ShoppingCart,
+  Zap,
   Home,
   LogIn,
   UserPlus,
@@ -58,10 +58,9 @@ export default function Layout() {
                 to="/cart"
                 className={`
                   relative flex items-center gap-2 px-4 py-2 rounded-lg transition-all
-                  ${
-                    location.pathname === '/cart'
-                      ? 'bg-emerald-600 text-white cyber-glow'
-                      : 'text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800'
+                  ${location.pathname === '/cart'
+                    ? 'bg-emerald-600 text-white cyber-glow'
+                    : 'text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800'
                   }
                 `}
               >
