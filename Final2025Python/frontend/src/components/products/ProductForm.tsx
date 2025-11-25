@@ -32,12 +32,12 @@ interface ProductFormProps {
   isPending?: boolean;
 }
 
-export function ProductForm({ 
-  open, 
-  onOpenChange, 
-  product, 
-  onSubmit, 
-  isPending = false 
+export function ProductForm({
+  open,
+  onOpenChange,
+  product,
+  onSubmit,
+  isPending = false
 }: ProductFormProps) {
   const { data: categories = [], isLoading: loadingCategories } = useQuery({
     queryKey: ['categories'],
@@ -179,9 +179,9 @@ export function ProductForm({
               disabled={loadingCategories}
               className="w-full rounded-md glassmorphism border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm text-zinc-100 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 disabled:opacity-50"
             >
-              <option value="">Select a category</option>
+              <option value="" className="bg-zinc-900 text-zinc-100">Select a category</option>
               {categories.map((category) => (
-                <option key={category.id_key} value={category.id_key}>
+                <option key={category.id_key} value={category.id_key} className="bg-zinc-900 text-zinc-100">
                   {category.name}
                 </option>
               ))}

@@ -17,6 +17,18 @@ import Register from '@/pages/Register';
 import Cart from '@/pages/Cart';
 import Checkout from '@/pages/Checkout';
 import Profile from '@/pages/Profile';
+import TermsAndConditions from '@/pages/TermsAndConditions';
+import PrivacyPolicy from '@/pages/PrivacyPolicy';
+import CookiePolicy from '@/pages/CookiePolicy';
+import RefundsPolicy from '@/pages/RefundsPolicy';
+import ComplaintsBook from '@/pages/ComplaintsBook';
+import HelpCenter from '@/pages/HelpCenter';
+import FAQ from '@/pages/FAQ';
+import Contact from '@/pages/Contact';
+import Returns from '@/pages/Returns';
+import About from '@/pages/About';
+import Blog from '@/pages/Blog';
+import ScrollToTop from '@/components/ScrollToTop';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -31,6 +43,7 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
+        <ScrollToTop />
         <Routes>
           <Route path="/" element={<Layout />}>
             <Route index element={<Landing />} />
@@ -47,6 +60,20 @@ function App() {
             <Route path="cart" element={<Cart />} />
             <Route path="checkout" element={<Checkout />} />
             <Route path="profile" element={<Profile />} />
+            {/* Legal Pages */}
+            <Route path="terms" element={<TermsAndConditions />} />
+            <Route path="privacy" element={<PrivacyPolicy />} />
+            <Route path="cookies" element={<CookiePolicy />} />
+            <Route path="refunds" element={<RefundsPolicy />} />
+            <Route path="complaints" element={<ComplaintsBook />} />
+            {/* Support Pages */}
+            <Route path="help" element={<HelpCenter />} />
+            <Route path="faq" element={<FAQ />} />
+            <Route path="contact" element={<Contact />} />
+            <Route path="returns" element={<Returns />} />
+            {/* Info Pages */}
+            <Route path="about" element={<About />} />
+            <Route path="blog" element={<Blog />} />
           </Route>
           {/* Auth routes without Layout */}
           <Route path="login" element={<Login />} />

@@ -254,11 +254,19 @@ export default function Landing() {
               <motion.div key={product.id_key} variants={itemVariants}>
                 <Link to={`/products/${product.id_key}`}>
                   <Card className="p-6 glassmorphism border-zinc-800 hover:border-emerald-500 transition-all group cursor-pointer overflow-hidden">
-                    {/* Product Image Placeholder */}
+                    {/* Product Image */}
                     <div className="relative aspect-square mb-4 bg-zinc-900 rounded-lg overflow-hidden">
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <Zap className="h-20 w-20 text-zinc-700 group-hover:text-emerald-500 transition-colors" />
-                      </div>
+                      {product.image_url ? (
+                        <img
+                          src={product.image_url}
+                          alt={product.name}
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                        />
+                      ) : (
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <Zap className="h-20 w-20 text-zinc-700 group-hover:text-emerald-500 transition-colors" />
+                        </div>
+                      )}
                       {product.stock < 10 && product.stock > 0 && (
                         <div className="absolute top-2 right-2 px-3 py-1 bg-amber-500 text-zinc-950 text-xs font-bold rounded-full">
                           ¡Últimas {product.stock} unidades!

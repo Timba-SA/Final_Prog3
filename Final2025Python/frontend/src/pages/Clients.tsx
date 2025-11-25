@@ -63,10 +63,17 @@ export default function Clients() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Prepare data with undefined for empty telephone to match TypeScript types
+    const submitData = {
+      ...formData,
+      telephone: formData.telephone.trim() === '' ? undefined : formData.telephone,
+    };
+
     if (editingClient) {
-      updateMutation.mutate({ id: editingClient.id_key, data: formData });
+      updateMutation.mutate({ id: editingClient.id_key, data: submitData });
     } else {
-      createMutation.mutate(formData as any);
+      createMutation.mutate(submitData as any);
     }
   };
 
@@ -164,15 +171,19 @@ export default function Clients() {
               </div>
 
               <div>
-                <Label htmlFor="telephone">Teléfono</Label>
+                <Label htmlFor="telephone">Teléfono (opcional)</Label>
                 <Input
                   id="telephone"
                   value={formData.telephone}
                   onChange={(e) =>
                     setFormData({ ...formData, telephone: e.target.value })
                   }
+                  placeholder="+5491112345678"
                   className="bg-zinc-800 border-zinc-700"
                 />
+                <p className="text-xs text-zinc-500 mt-1">
+                  Formato: +código país + número (7-20 dígitos)
+                </p>
               </div>
 
               <div className="flex gap-2">

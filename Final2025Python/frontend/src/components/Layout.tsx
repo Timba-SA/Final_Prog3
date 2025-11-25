@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import Footer from '@/components/Footer';
 
 export default function Layout() {
   const location = useLocation();
@@ -141,77 +142,7 @@ export default function Layout() {
       </main>
 
       {/* Footer */}
-      <footer className="glassmorphism border-t border-zinc-800 mt-12">
-        <div className="container mx-auto px-6 py-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-6">
-            {/* Brand */}
-            <div>
-              <div className="flex items-center gap-2 mb-4">
-                <Zap className="h-6 w-6 text-emerald-500" />
-                <span className="text-lg font-bold">
-                  Cyber<span className="text-emerald-500">Store</span>
-                </span>
-              </div>
-              <p className="text-zinc-500 text-sm">
-                Tu tienda tech del futuro. Productos premium y la mejor experiencia de compra.
-              </p>
-            </div>
-
-            {/* Quick Links */}
-            <div>
-              <h3 className="font-bold mb-4">Links Rápidos</h3>
-              <ul className="space-y-2 text-sm">
-                <li>
-                  <Link to="/products" className="text-zinc-500 hover:text-emerald-500 transition-colors">
-                    Catálogo
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/categories" className="text-zinc-500 hover:text-emerald-500 transition-colors">
-                    Categorías
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/dashboard" className="text-zinc-500 hover:text-emerald-500 transition-colors">
-                    Dashboard
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/cart" className="text-zinc-500 hover:text-emerald-500 transition-colors">
-                    Carrito
-                  </Link>
-                </li>
-              </ul>
-            </div>
-
-            {/* Contact */}
-            <div>
-              <h3 className="font-bold mb-4">Contacto</h3>
-              <ul className="space-y-2 text-sm text-zinc-500">
-                <li>Email: info@cyberstore.com</li>
-                <li>Tel: +54 9 11 1234-5678</li>
-                <li>Buenos Aires, Argentina</li>
-              </ul>
-            </div>
-          </div>
-
-          <div className="border-t border-zinc-800 pt-6 flex flex-col sm:flex-row items-center justify-between text-sm text-zinc-500">
-            <p>© 2025 CyberStore. Built with FastAPI + React.</p>
-            <div className="flex items-center gap-4 mt-4 sm:mt-0">
-              <span>Version 1.0.0</span>
-              <span>•</span>
-              <a
-                href="https://github.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:text-emerald-500 transition-colors"
-              >
-                GitHub
-              </a>
-            </div>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }
